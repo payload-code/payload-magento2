@@ -1,0 +1,32 @@
+{
+    "name": "payload/payload-magento",
+    "description": "Payload Magento2 Integration",
+
+    "type": "magento2-module",
+    "version": "0.1.0",
+    "license":  [
+        "OSL-3.0"
+    ],
+
+    "authors": [
+        {
+          "name": "Payload",
+          "email": "contact@payload.co",
+          "homepage": "https://payload.co"
+        }
+    ],
+
+    "require": {
+        "php": "~7.1.0|~7.2.0|~7.3.0",
+        "payload/payload-api": ">=0.1.0"
+    },
+
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Payload\\PayloadMagento\\": ""
+        }
+    }
+}

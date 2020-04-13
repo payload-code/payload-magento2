@@ -1,0 +1,41 @@
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+    <div class="payment-method-title field choice">
+        <input type="radio"
+               name="payment[method]"
+               class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
+        <label class="label" data-bind="attr: {'for': getCode()}">
+            <span>Credit/Debit Card</span>
+        </label>
+    </div>
+
+    <div class="payment-method-content">
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+
+        <form id="payload-checkout-form" pl-form="payment" afterRender="initPayload">
+                <div class="payment-method-billing-address">
+                    <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                    <!--/ko-->
+                </div>
+
+                <div class="field required">
+                    <label class="label"><span>Card Details</span></label>
+
+                    <div class="control">
+                        <div pl-input="card" style="padding:10px;"></div>
+                    </div>
+                </div>
+        </form>
+
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button class="action primary checkout" type="submit" data-bind="click: placePayloadOrder">
+                    Place Order
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
