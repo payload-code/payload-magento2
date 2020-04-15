@@ -21,23 +21,30 @@ class PayloadClient implements ClientInterface {
     public function placeRequest(TransferInterface $transferObject) {
         $request = $transferObject->getBody();
 
-        pl::$api_url =  "http://payload-dev.co:8000/api";
-        pl::$api_key =  $this->encryptor->decrypt($request['api_key']);
+        pl::$api_key = $this->encryptor->decrypt($request['api_key']);
 
-        $payment = \Payload\Transaction::get($request['payment']['id']);
+        try {
 
-        if ( $request['payment']['status'] == 'authorized' ) {
-            $payment->update([
-                'order_number' => $request['payment']['order_number']
-            ]);
-        } else if ( $request['payment']['status'] == 'processed' ) {
-            $payment->update([
-                'status' => 'processed'
-            ]);
-        } else if ( $request['payment']['status'] == 'voided' ) {
-            $payment->update([
-                'status'=> 'voided'
-            ]);
+            $payment = \Payload\Transaction::get($request['payment']['id']);
+
+            if ( $request['payment']['status'] == 'authorized' ) {
+                $payment->update([
+                    'order_number' => $request['payment']['order_number']
+                ]);
+            } else if ( $request['payment']['status'] == 'processed' ) {
+                $payment->update([
+                    'status' => 'processed'
+                ]);
+            } else if ( $request['payment']['status'] == 'voided' ) {
+                $payment->update([
+                    'status'=> 'voided'
+                ]);
+            }
+
+        } catch ( \Payload\Exceptions\NotPermitted $e ) {
+            return [
+                'error' => 'There is an issue with the configuration of the store'
+            ];
         }
 
         $this->logger->debug([

@@ -31,7 +31,7 @@ bin/magento setup:upgrade
 
 5. Enter your Payload client and secret keys
 
-6. *Optional* Specifiy a specific `processing_id`
+6. *(Optional)* Provide a specific `processing_id`
 
 7. Set the Payload payment method to active
 

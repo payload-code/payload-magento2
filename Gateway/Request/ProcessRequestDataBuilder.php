@@ -15,14 +15,21 @@ class ProcessRequestDataBuilder implements BuilderInterface {
 
     public function build(array $buildSubject) {
         $payment = $buildSubject['payment']->getPayment();
+        $order   = $buildSubject['payment']->getOrder();
 
         $txn_id = explode(':',$payment->getLastTransId());
-        return [
+
+        $req = [
             'payment' => [
                 'id' => end($txn_id),
                 'status' => 'processed',
             ],
             'api_key' => $this->config->getValue('payload_secret_key', $order->getStoreId())
         ];
+
+        if ( $this->config->getValue('payload_processing_id', $order->getStoreId()) )
+            $req['payment']['processing_id'] = $this->config->getValue('payload_processing_id', $order->getStoreId());
+
+        return $req;
     }
 }

@@ -17,7 +17,7 @@ class AuthorizeRequestDataBuilder implements BuilderInterface {
         $payment = $buildSubject['payment']->getPayment();
         $order   = $buildSubject['payment']->getOrder();
 
-        return [
+        $req = [
             'payment' => [
                 'id' => $payment->getAdditionalInformation('transaction_id'),
                 'status' => 'authorized',
@@ -26,5 +26,10 @@ class AuthorizeRequestDataBuilder implements BuilderInterface {
             ],
             'api_key' => $this->config->getValue('payload_secret_key', $order->getStoreId())
         ];
+
+        if ( $this->config->getValue('payload_processing_id', $order->getStoreId()) )
+            $req['payment']['processing_id'] = $this->config->getValue('payload_processing_id', $order->getStoreId());
+
+        return $req;
     }
 }

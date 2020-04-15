@@ -9,6 +9,8 @@ class ConfigProvider implements ConfigProviderInterface
 {
     const CODE = 'payload';
     const PL_CLIENT_KEY = 'payment/payload/payload_client_key';
+    const PL_SECRET_KEY = 'payment/payload/payload_secret_key';
+    const PL_PROCESSING_ID = 'payment/payload/payload_processing_id';
 
     protected $encryptor;
     protected $scopeConfig;
@@ -26,7 +28,8 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             'payment' => [
                 self::CODE => [
-                    'payloadClientKey' => $this->getClientKey()
+                    'client_key' => $this->getClientKey(),
+                    'processig_id' => $this->getProcessingID()
                 ]
             ]
         ];
@@ -37,4 +40,11 @@ class ConfigProvider implements ConfigProviderInterface
         $key = $this->scopeConfig->getValue(self::PL_CLIENT_KEY, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         return $this->encryptor->decrypt($key);
     }
+
+    public function getProcessingID()
+    {
+        $key = $this->scopeConfig->getValue(self::PL_PROCESSING_ID, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->encryptor->decrypt($key);
+    }
+
 }
