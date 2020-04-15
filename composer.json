@@ -1,9 +1,9 @@
 {
-    "name": "payload/payload-magento",
+    "name": "payload/payload-magento2",
     "description": "Payload Magento2 Integration",
 
     "type": "magento2-module",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "license":  [
         "OSL-3.0"
     ],
