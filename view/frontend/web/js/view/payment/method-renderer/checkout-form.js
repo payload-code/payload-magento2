@@ -5,19 +5,41 @@ define([
         'loader',
         'Magento_Checkout/js/model/quote',
         'Magento_Checkout/js/view/payment/default',
-    ], function ($, loader, quote, Component) {
+        'Magento_Vault/js/view/payment/vault-enabler'
+    ], function ($, loader, quote, Component, VaultEnabler) {
         return Component.extend({
             defaults: {
                 template: 'Payload_PayloadMagento/payment/checkout-form',
             },
 
+            initialize: function () {
+                this._super();
+                this.vaultEnabler = new VaultEnabler();
+                console.log(this)
+                this.vaultEnabler.setPaymentCode(this.getVaultCode());
+                return this;
+            },
+
             getData: function() {
-                return {
+                var data = {
                     'method': this.item.method,
                     'additional_data': {
                         'transaction_id': this.transaction_id
                     }
                 }
+
+                data['additional_data'] = _.extend(data['additional_data'], this.additionalData);
+                this.vaultEnabler.visitAdditionalData(data);
+
+                return data
+            },
+
+            isVaultEnabled: function () {
+                return this.vaultEnabler.isVaultEnabled();
+            },
+
+            getVaultCode: function () {
+                return window.checkoutConfig.payment[this.getCode()].ccVaultCode;
             },
 
             initPayload: function() {
@@ -27,8 +49,11 @@ define([
                     status: 'authorized',
                 }
 
-                if ( window.checkoutConfig.payment.payload.processing_id )
-                    defaults.processing_id = window.checkoutConfig.payment.payload.processing_id
+                if ( window.checkoutConfig.payment[this.getCode()].processing_id )
+                    defaults.processing_id = window.checkoutConfig.payment[this.getCode()].processing_id
+
+                if ( window.checkoutConfig.payment[this.getCode()].customer_id )
+                    defaults.customer_id = window.checkoutConfig.payment[this.getCode()].customer_id
 
                 this.pl_checkout_form = new Payload.Form({
                     form: document.getElementById('payload-checkout-form'),

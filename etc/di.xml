@@ -11,6 +11,15 @@
             <argument name="commandPool" xsi:type="object">PayloadCommandPool</argument>
         </arguments>
     </virtualType>
+    <virtualType name="PayloadVaultFacade" type="Magento\Vault\Model\Method\Vault">
+        <arguments>
+            <argument name="code" xsi:type="const">\Payload\PayloadMagento\Model\Ui\ConfigProvider::VAULT_CODE</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PayloadVaultPaymentValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">PayloadFacade</argument>
+            <argument name="config" xsi:type="object">PayloadVaultPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
 
     <!-- Configuration reader -->
     <virtualType name="PayloadConfig" type="Magento\Payment\Gateway\Config\Config">
@@ -33,16 +42,47 @@
         </arguments>
     </type>
 
-    <!-- Command pool -->
+    <virtualType name="PayloadVaultPaymentConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Payload\PayloadMagento\Model\Ui\ConfigProvider::VAULT_CODE</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayloadVaultPaymentValueHandler" type="VaultPaymentDefaultValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">PayloadVaultPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayloadVaultPaymentValueHandlerPool" type="VaultPaymentValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PayloadVaultPaymentValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Command manager & pool -->
+    <virtualType name="PayloadCommandManager" type="Magento\Payment\Gateway\Command\CommandManager">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">PayloadCommandPool</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="PayloadCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="authorize" xsi:type="string">PayloadAuthorizeCommand</item>
                 <item name="capture" xsi:type="string">PayloadProcessCommand</item>
                 <item name="void" xsi:type="string">PayloadVoidCommand</item>
+                <item name="vault_authorize" xsi:type="string">PayloadVaultAuthorizeCommand</item>
             </argument>
         </arguments>
     </virtualType>
+    <type name="Magento\Payment\Gateway\Command\CommandManagerPool">
+        <arguments>
+            <argument name="executors" xsi:type="array">
+                <item name="payload" xsi:type="string">PayloadCommandManager</item>
+            </argument>
+        </arguments>
+    </type>
 
     <!-- Commands -->
     <virtualType name="PayloadAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
@@ -52,6 +92,8 @@
             <argument name="transferFactory" xsi:type="object">Payload\PayloadMagento\Gateway\Http\TransferFactory</argument>
             <argument name="client" xsi:type="object">Payload\PayloadMagento\Gateway\Http\Client\PayloadClient</argument>
             <argument name="validator" xsi:type="object">Payload\PayloadMagento\Gateway\Validator\ResponseValidator</argument>
+            <argument name="builders" xsi:type="array">
+            </argument>
         </arguments>
     </virtualType>
     <virtualType name="PayloadProcessCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
@@ -72,12 +114,22 @@
             <argument name="validator" xsi:type="object">Payload\PayloadMagento\Gateway\Validator\ResponseValidator</argument>
         </arguments>
     </virtualType>
+    <virtualType name="PayloadVaultAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">Payload\PayloadMagento\Gateway\Request\AuthorizeRequestDataBuilder</argument>
+            <argument name="transferFactory" xsi:type="object">Payload\PayloadMagento\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">Payload\PayloadMagento\Gateway\Http\Client\PayloadClient</argument>
+            <argument name="handler" xsi:type="object">Payload\PayloadMagento\Gateway\Response\ResponseHandler</argument>
+            <argument name="validator" xsi:type="object">Payload\PayloadMagento\Gateway\Validator\ResponseValidator</argument>
+        </arguments>
+    </virtualType>
 
     <!-- Requests -->
     <virtualType name="PayloadAuthorizeRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
                 <item name="transaction" xsi:type="string">Payload\PayloadMagento\Gateway\Request\AuthorizeRequestDataBuilder</item>
+                <!--<item name="vault" xsi:type="string">Payload\PayloadMagento\Gateway\Request\VaultDataBuilder</item>-->
             </argument>
         </arguments>
     </virtualType>
@@ -102,11 +154,24 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="txnid" xsi:type="string">Payload\PayloadMagento\Gateway\Response\ResponseHandler</item>
+                <item name="vault_details" xsi:type="string">Payload\PayloadMagento\Gateway\Response\VaultDetailsHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayloadVaultResponseHandler" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="txnid" xsi:type="string">Payload\PayloadMagento\Gateway\Response\ResponseHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
     <!-- Value handlers -->
+    <type name="Payload\PayloadMagento\Gateway\Response\VaultDetailsHandler">
+        <arguments>
+            <argument name="paymentTokenFactory" xsi:type="object">Magento\Vault\Model\CreditCardTokenFactory</argument>
+        </arguments>
+    </type>
     <virtualType name="PayloadValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
@@ -117,6 +182,16 @@
     <virtualType name="PayloadConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
             <argument name="configInterface" xsi:type="object">PayloadConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PayloadVaultAuthorizeRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="transaction" xsi:type="string">Payload\PayloadMagento\Gateway\Request\AuthorizeRequestDataBuilder</item>
+                <!--<item name="payment" xsi:type="string">Payload\PayloadMagento\Gateway\Request\PaymentDataBuilder</item>
+                <item name="customer" xsi:type="string">Payload\PayloadMagento\Gateway\Request\CustomerDataBuilder</item>-->
+            </argument>
         </arguments>
     </virtualType>
 

@@ -25,25 +25,33 @@ class PayloadClient implements ClientInterface {
 
         try {
 
-            $payment = \Payload\Transaction::get($request['payment']['id']);
+            if ( !isset($request['payment']['id']) ) {
+                $payment = \Payload\Transaction::create($request['payment']);
+            } else {
+                $payment = \Payload\Transaction::get($request['payment']['id']);
 
-            if ( $request['payment']['status'] == 'authorized' ) {
-                $payment->update([
-                    'order_number' => $request['payment']['order_number']
-                ]);
-            } else if ( $request['payment']['status'] == 'processed' ) {
-                $payment->update([
-                    'status' => 'processed'
-                ]);
-            } else if ( $request['payment']['status'] == 'voided' ) {
-                $payment->update([
-                    'status'=> 'voided'
-                ]);
+                if ( $request['payment']['status'] == 'authorized' ) {
+                    $payment->update([
+                        'order_number' => $request['payment']['order_number']
+                    ]);
+                } else if ( $request['payment']['status'] == 'processed' ) {
+                    $payment->update([
+                        'status' => 'processed'
+                    ]);
+                } else if ( $request['payment']['status'] == 'voided' ) {
+                    $payment->update([
+                        'status'=> 'voided'
+                    ]);
+                }
             }
 
         } catch ( \Payload\Exceptions\NotPermitted $e ) {
             return [
                 'error' => 'There is an issue with the configuration of the store'
+            ];
+        } catch ( \Payload\Exceptions\PayloadError $e ) {
+            return [
+                'error' => $e->getMessage()
             ];
         }
 
@@ -54,6 +62,7 @@ class PayloadClient implements ClientInterface {
 
         return [
             'request' => $request["payment"],
+            'store_token' => $request["store_token"],
             'response' => $payment
         ];
     }

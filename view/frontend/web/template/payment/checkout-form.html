@@ -5,7 +5,7 @@
                class="radio"
                data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
         <label class="label" data-bind="attr: {'for': getCode()}">
-            <span>Credit/Debit Card</span>
+            <span>Credit / Debit Card</span>
         </label>
     </div>
 
@@ -15,19 +15,32 @@
         <!--/ko-->
 
         <form id="payload-checkout-form" pl-form="payment" afterRender="initPayload">
-                <div class="payment-method-billing-address">
-                    <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
-                    <!-- ko template: getTemplate() --><!-- /ko -->
-                    <!--/ko-->
-                </div>
 
-                <div class="field required">
-                    <label class="label"><span>Card Details</span></label>
+            <div class="payment-method-billing-address">
+                <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+                <!--/ko-->
+            </div>
 
-                    <div class="control">
-                        <div pl-input="card" style="padding:10px;"></div>
-                    </div>
+            <div class="field required">
+                <label class="label"><span>Card Details</span></label>
+
+                <div class="control">
+                    <div pl-input="card" style="padding:10px;"></div>
                 </div>
+            </div>
+
+            <!-- ko if: (isVaultEnabled())-->
+            <div data-role="vault-checkbox" class="field choice">
+                <input type="checkbox"
+                    name="vault[is_enabled]"
+                    class="checkbox"
+                    data-bind="attr: {'id': getCode() + '_enable_vault'}, checked: vaultEnabler.isActivePaymentTokenEnabler"/>
+                <label class="label" data-bind="attr: {'for': getCode() + '_enable_vault'}">
+                    <span><!-- ko i18n: 'Save for later use.'--><!-- /ko --></span>
+                </label>
+            </div>
+            <!-- /ko -->
         </form>
 
         <div class="actions-toolbar">
