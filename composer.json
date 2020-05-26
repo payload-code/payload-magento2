@@ -3,7 +3,7 @@
     "description": "Payload Magento2 Integration",
 
     "type": "magento2-module",
-    "version": "0.2.6",
+    "version": "0.2.7",
     "license":  [
         "OSL-3.0"
     ],
@@ -16,9 +16,12 @@
         }
     ],
 
+   "minimum-stability": "dev",
+   "prefer-stable": true,
+
     "require": {
         "php": "~7.1.0|~7.2.0|~7.3.0",
-        "payload/payload-api": ">=0.2.0",
+        "payload/payload-api": ">=0.2.3",
         "magento/module-payment": "100.3.*",
         "magento/module-checkout": "100.3.*",
         "magento/module-sales": "102.0.*",
