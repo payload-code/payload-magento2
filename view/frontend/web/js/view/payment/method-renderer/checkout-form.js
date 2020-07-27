@@ -96,7 +96,7 @@ define([
             },
 
             placePayloadOrder: function() {
-                this.pl_checkout_form.params.payment.amount = quote.totals().grand_total
+                this.pl_checkout_form.params.payment.amount = quote.totals().base_grand_total
 
                 var billing_address = quote.billingAddress()
                 if ( billing_address )
