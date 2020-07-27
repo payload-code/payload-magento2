@@ -89,7 +89,7 @@ define([
                 }.bind(this))
 
                 this.pl_checkout_form.on('declined', function(data) {
-                    $('#payload-checkout-form').next().find('[type=submit]').prop('disabled', true)
+                    $('#payload-checkout-form').next().find('[type=submit]').prop('disabled', false)
                     this.messageContainer.addErrorMessage({message: data.message});
                 }.bind(this))
 
