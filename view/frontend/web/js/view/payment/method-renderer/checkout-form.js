@@ -87,6 +87,12 @@ define([
                 this.pl_checkout_form.on('processing', function(data) {
                     $('#payload-checkout-form').next().find('[type=submit]').prop('disabled', true)
                 }.bind(this))
+
+                this.pl_checkout_form.on('declined', function(data) {
+                    $('#payload-checkout-form').next().find('[type=submit]').prop('disabled', true)
+                    this.messageContainer.addErrorMessage({message: data.message});
+                }.bind(this))
+
             },
 
             placePayloadOrder: function() {
