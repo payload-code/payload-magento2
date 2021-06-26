@@ -3,7 +3,7 @@
     "description": "Payload Magento2 Integration",
 
     "type": "magento2-module",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "license":  [
         "OSL-3.0"
     ],
@@ -22,13 +22,20 @@
     "require": {
         "php": "~7.1.0|~7.2.0|~7.3.0|~7.4.0",
         "payload/payload-api": ">=0.3.0",
-        "magento/module-payment": "100.3.*",
-        "magento/module-checkout": "100.3.*",
-        "magento/module-sales": "102.0.*",
-        "magento/module-backend": "101.0.*",
-        "magento/module-vault": "101.1.*",
-        "magento/module-quote": "101.1.*"
+        "magento/module-payment": "100.4.*",
+        "magento/module-checkout": "100.4.*",
+        "magento/module-sales": "103.0.*",
+        "magento/module-backend": "102.0.*",
+        "magento/module-vault": "101.2.*",
+        "magento/module-quote": "101.2.*"
     },
+
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        }
+    ],
 
     "autoload": {
         "files": [
@@ -44,4 +51,5 @@
         "phpcompatibility/php-compatibility": "*",
         "squizlabs/php_codesniffer": "3.*"
     }
+
 }
