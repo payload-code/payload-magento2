@@ -42,8 +42,56 @@ define([
                 return window.checkoutConfig.payment[this.getCode()].ccVaultCode;
             },
 
+            isCardsEnabled: function () {
+                return window.checkoutConfig.payment[this.getCode()].cards_enabled == "1";
+            },
+
+            isACHEnabled: function () {
+                return window.checkoutConfig.payment[this.getCode()].ach_enabled == "1";
+            },
+
+            isGooglePayEnabled: function () {
+                return window.checkoutConfig.payment[this.getCode()].googlepay_enabled == "1";
+            },
+
+            isApplePayEnabled: function () {
+                return window.checkoutConfig.payment[this.getCode()].applepay_enabled == "1";
+            },
+
+            showACHTab: function() {
+                if ( this.ach_tab )
+                    $(this.ach_tab).insertAfter($('#card-tab-content'))
+
+                if ( !this.card_tab )
+                    this.card_tab = $('#card-tab-content')[0]
+
+                $('#card-tab-content').remove()
+                $('#card-tab').removeClass('active')
+                $('#ach-tab').addClass('active')
+            },
+
+            showCardTab: function() {
+                if ( this.card_tab )
+                    $(this.card_tab).insertAfter($('#ach-tab-content'))
+
+                if ( !this.ach_tab )
+                    this.ach_tab = $('#ach-tab-content')[0]
+
+                $('#ach-tab-content').remove()
+                $('#ach-tab').removeClass('active')
+                $('#card-tab').addClass('active')
+            },
+
             initPayload: function() {
                 Payload(window.checkoutConfig.payment.payload.client_key)
+
+                if ( this.isGooglePayEnabled() ) {
+                    var paymentsClient = new google.payments.api.PaymentsClient({
+                        environment: 'TEST'
+                    });
+                    var button = paymentsClient.createButton({onClick: () => {}});
+                    $('.google-pay-support>div').html(button)
+                }
 
                 var defaults = {
                     status: 'authorized',
@@ -61,6 +109,9 @@ define([
                     autosubmit: false
                 })
 
+                if ( this.isCardsEnabled() )
+                    this.showCardTab()
+
                 this.pl_checkout_form.on('error', function(error) {
                     $('#payload-checkout-form').next().find('[type=submit]').prop('disabled', false)
 
@@ -72,6 +123,10 @@ define([
                             error_msg = 'Invalid card number'
                         if ( error.details['payment_method[card][card_number]'] )
                             error_msg = 'Invalid card number'
+                        if ( error.details['payment_method[bank_account][account_number]'] )
+                            error_msg = 'Invalid account number'
+                        if ( error.details['payment_method[bank_account][routing_number]'] )
+                            error_msg = 'Invalid routing number'
                     }
 
                     this.messageContainer.addErrorMessage({message: error_msg});
@@ -93,6 +148,22 @@ define([
                     this.messageContainer.addErrorMessage({message: data.message});
                 }.bind(this))
 
+
+                if ( this.isApplePayEnabled() ) {
+                    this.pl_checkout_form.applepay($('.apple-pay-button').get(0), function(active) {
+                        if (!active)
+                            $('.apple-pay-button').hide()
+                    })
+
+                }
+
+                if ( this.isApplePayEnabled() ) {
+                    this.pl_checkout_form.googlepay($('.gpay-button').get(0), function(active) {
+                        if (!active)
+                            $('.gpay-button').hide()
+                    })
+                }
+
             },
 
             placePayloadOrder: function() {
@@ -109,7 +180,6 @@ define([
                             postal_code: billing_address.postcode
                         }
                     }
-
 
                 this.pl_checkout_form.submit()
             }

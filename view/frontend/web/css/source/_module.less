@@ -1,10 +1,34 @@
 #payload-checkout-form {
-	[data-role="vault-checkbox"] {
-		margin-top: 1rem;
-	}
+    [data-role="vault-checkbox"] {
+        margin-top: 1rem;
+    }
 
-	.pl-input-sec[pl-input=card] {
-		width:100%;
-		max-width:400px;
-	}
+    .pl-input {
+        max-width: 400px;
+        margin: 5px 0;
+    }
+
+    input.pl-input, div.pl-input {
+        padding: 10px;
+        display: flex;
+    }
+
+    .payment-method-wallet {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .tab {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        &.active {
+            background: white;
+            border-bottom-color: white;
+        }
+    }
+
+    .tab-content {
+        margin-top: 20px;
+        max-width: 400px;
+    }
 }

@@ -5,14 +5,17 @@ namespace Payload\PayloadMagento\Gateway\Request;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface;
+use Magento\Payment\Model\Method\Logger;
 use Magento\Framework\Encryption\EncryptorInterface;
 
 class AuthorizeRequestDataBuilder implements BuilderInterface {
     private $config;
+    private $logger;
 
     protected $encryptor;
 
-    public function __construct(EncryptorInterface $encryptor, ConfigInterface $config) {
+    public function __construct(Logger $logger, EncryptorInterface $encryptor, ConfigInterface $config) {
+        $this->logger = $logger;
         $this->encryptor = $encryptor;
         $this->config = $config;
     }

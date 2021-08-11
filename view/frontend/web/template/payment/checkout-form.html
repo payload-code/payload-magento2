@@ -5,7 +5,12 @@
                class="radio"
                data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
         <label class="label" data-bind="attr: {'for': getCode()}">
-            <span>Credit / Debit Card</span>
+            <span>
+                Credit / Debit Card
+                <!-- ko if: (isACHEnabled()) -->
+                / Bank Account (ACH)
+                <!--/ko-->
+            </span>
         </label>
     </div>
 
@@ -22,13 +27,65 @@
                 <!--/ko-->
             </div>
 
-            <div class="field required">
-                <label class="label"><span>Card Details</span></label>
+            <!-- ko if: (isCardsEnabled()) -->
+            <button type="button" id="card-tab" class="tab active" data-bind="click: showCardTab">Card</button>
+            <!--/ko-->
+            <!-- ko if: (isACHEnabled()) -->
+            <button type="button" id="ach-tab" class="tab" data-bind="click: showACHTab">Bank Account (ACH)</button>
+            <!--/ko-->
 
-                <div class="control">
-                    <div pl-input="card" style="padding:10px;"></div>
+            <!-- ko if: (isCardsEnabled()) -->
+            <div id="card-tab-content" class="tab-content">
+                <div class="field required">
+                    <div class="control">
+                        <div pl-input="card" style="padding:10px;"></div>
+                    </div>
+                </div>
+
+                <!-- ko if: (isGooglePayEnabled()) -->
+                <div class="field payment-method-wallet">
+                    <div class="control">
+                        <div class="google-pay-support">
+                            <div class="col-0">
+                                <button class="gpay-button black short" type="button">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /ko -->
+
+                <!-- ko if: (isApplePayEnabled()) -->
+                <div class="field payment-method-walle">
+                    <div class="control">
+                        <div class="apple-pay-support">
+                            <div class="apple-pay-button apple-pay-button-black"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /ko -->
+            </div>
+            <!--/ko-->
+
+             <!-- ko if: (isACHEnabled()) -->
+            <div id="ach-tab-content" class="tab-content">
+                <input type="hidden" name="payment_method[type]" value="bank_account"/>
+                <div class="field required">
+                    <div class="control">
+                        <div class="form-control" pl-input="account_number"></div>
+                    </div>
+                    <div class="control">
+                        <div class="form-control" pl-input="routing_number"></div>
+                    </div>
+                    <div class="control">
+                        <select pl-input="account_type">
+                            <option value="checking">Checking</option>
+                            <option value="savings">Savings</option>
+                        </select>
+                    </div>
                 </div>
             </div>
+            <!--/ko-->
 
             <!-- ko if: (isVaultEnabled())-->
             <div data-role="vault-checkbox" class="field choice">

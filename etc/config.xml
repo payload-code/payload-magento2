@@ -8,6 +8,7 @@
                 <payment_action>authorize</payment_action>
                 <debug>1</debug>
                 <active>1</active>
+                <payload_cards_enabled>1</payload_cards_enabled>
                 <order_status>pending_payment</order_status>
                 <currency>USD</currency>
                 <can_authorize>1</can_authorize>

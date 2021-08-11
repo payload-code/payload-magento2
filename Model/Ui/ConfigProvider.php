@@ -14,6 +14,10 @@ class ConfigProvider implements ConfigProviderInterface
     const PL_CLIENT_KEY = 'payment/payload/payload_client_key';
     const PL_SECRET_KEY = 'payment/payload/payload_secret_key';
     const PL_PROCESSING_ID = 'payment/payload/payload_processing_id';
+    const CARDS_ENABLED = 'payment/payload/payload_cards_enabled';
+    const ACH_ENABLED = 'payment/payload/payload_ach_enabled';
+    const GOOGLEPAY_ENABLED = 'payment/payload/payload_googlepay_enabled';
+    const APPLEPAY_ENABLED = 'payment/payload/payload_applepay_enabled';
 
     protected $encryptor;
     protected $scopeConfig;
@@ -37,6 +41,10 @@ class ConfigProvider implements ConfigProviderInterface
                 self::CODE => [
                     'client_key' => $this->getClientKey(),
                     'processing_id' => $this->getProcessingID(),
+                    'cards_enabled' => $this->getCardsEnabled(),
+                    'ach_enabled' => $this->getACHEnabled(),
+                    'googlepay_enabled' => $this->getGooglePayEnabled(),
+                    'applepay_enabled' => $this->getApplePayEnabled(),
                     'ccVaultCode' => self::VAULT_CODE
                 ]
             ]
@@ -63,6 +71,22 @@ class ConfigProvider implements ConfigProviderInterface
     public function getProcessingID() {
         $key = $this->scopeConfig->getValue(self::PL_PROCESSING_ID, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         return $this->encryptor->decrypt($key);
+    }
+
+    public function getCardsEnabled() {
+        return $this->scopeConfig->getValue(self::CARDS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    public function getACHEnabled() {
+        return $this->scopeConfig->getValue(self::ACH_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    public function getGooglePayEnabled() {
+        return $this->scopeConfig->getValue(self::GOOGLEPAY_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    public function getApplePayEnabled() {
+        return $this->scopeConfig->getValue(self::APPLEPAY_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     public function getCustId() {
