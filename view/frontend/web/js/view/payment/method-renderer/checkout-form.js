@@ -150,23 +150,33 @@ define([
 
 
                 if ( this.isApplePayEnabled() ) {
-                    this.pl_checkout_form.applepay($('.apple-pay-button').get(0), function(active) {
+                    this.pl_checkout_form.applepay(function(active) {
                         if (!active)
                             $('.apple-pay-button').hide()
-                    })
+                        else
+                            $('.apple-pay-button').click(function() {
+                                this.buildPaymentRequest()
+                                this.pl_checkout_form.applepay('open')
+                            }.bind(this))
+                    }.bind(this))
 
                 }
 
                 if ( this.isGooglePayEnabled() ) {
-                    this.pl_checkout_form.googlepay($('.google-pay-support button').get(0), function(active) {
+                    this.pl_checkout_form.googlepay( function(active) {
                         if (!active)
                             $('.google-pay-support button').hide()
-                    })
+                        else
+                            $('.google-pay-support button').click(function() {
+                                this.buildPaymentRequest()
+                                this.pl_checkout_form.googlepay('open')
+                            }.bind(this))
+                    }.bind(this))
                 }
 
             },
 
-            placePayloadOrder: function() {
+            buildPaymentRequest: function() {
                 this.pl_checkout_form.params.payment.amount = quote.totals().base_grand_total
 
                 var billing_address = quote.billingAddress()
@@ -180,6 +190,10 @@ define([
                             postal_code: billing_address.postcode
                         }
                     }
+            },
+
+            placePayloadOrder: function() {
+                this.buildPaymentRequest()
 
                 this.pl_checkout_form.submit()
             }
