@@ -157,10 +157,10 @@ define([
 
                 }
 
-                if ( this.isApplePayEnabled() ) {
-                    this.pl_checkout_form.googlepay($('.gpay-button').get(0), function(active) {
+                if ( this.isGooglePayEnabled() ) {
+                    this.pl_checkout_form.googlepay($('.google-pay-support button').get(0), function(active) {
                         if (!active)
-                            $('.gpay-button').hide()
+                            $('.google-pay-support button').hide()
                     })
                 }
 
