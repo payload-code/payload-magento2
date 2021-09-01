@@ -51,6 +51,10 @@
                     <label>Bank Account Payments (ACH)</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="payment_action" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Payment Action</label>
+                    <source_model>Payload\PayloadMagento\Model\Adminhtml\Source\PaymentAction</source_model>
+                </field>
             </group>
         </section>
     </system>

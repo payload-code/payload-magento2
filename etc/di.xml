@@ -135,11 +135,13 @@
     </virtualType>
     <type name="Payload\PayloadMagento\Gateway\Request\AuthorizeRequestDataBuilder">
         <arguments>
+            <argument name="logger" xsi:type="object">PayloadLogger</argument>
             <argument name="config" xsi:type="object">PayloadConfig</argument>
         </arguments>
     </type>
     <type name="Payload\PayloadMagento\Gateway\Request\ProcessRequestDataBuilder">
         <arguments>
+            <argument name="logger" xsi:type="object">PayloadLogger</argument>
             <argument name="config" xsi:type="object">PayloadConfig</argument>
         </arguments>
     </type>

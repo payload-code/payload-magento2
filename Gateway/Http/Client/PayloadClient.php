@@ -50,6 +50,9 @@ class PayloadClient implements ClientInterface {
                 'error' => 'There is an issue with the configuration of the store'
             ];
         } catch ( \Payload\Exceptions\PayloadError $e ) {
+            $this->logger->debug([
+                'error' => $e->getMessage()
+            ]);
             return [
                 'error' => $e->getMessage()
             ];

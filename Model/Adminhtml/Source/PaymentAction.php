@@ -11,6 +11,10 @@ class PaymentAction implements ArrayInterface {
             [
                 'value' => AbstractMethod::ACTION_AUTHORIZE,
                 'label' => __('Authorize')
+            ],
+            [
+                'value' => AbstractMethod::ACTION_AUTHORIZE_CAPTURE,
+                'label' => __('Authorize and capture')
             ]
         ];
     }
