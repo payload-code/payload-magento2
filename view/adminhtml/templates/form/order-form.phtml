@@ -1,0 +1,97 @@
+<?php
+
+/**
+ * @var \Payload\PayloadMagento\Block\Form $block
+ */
+$code = $block->escapeHtml($block->getMethodCode());
+$config = $block->getConfigJSON();
+?>
+
+<style type="text/css">
+    .admin__payment-method-wrapper {
+        width: 100%;
+    }
+
+    #payment_form_payload {
+        padding-top:3rem;
+    }
+
+    input.pl-input, div.pl-input {
+        max-width: 400px;
+        height: 3rem;
+        display: flex;
+        width:100%;
+    }
+
+    div.pl-input>div {
+        width: 100%;
+    }
+
+    #payment_form_payload .tab {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    #payment_form_payload .tab.active {
+        background: white;
+        border-bottom-color: white;
+    }
+
+    #payment_form_payload .tab-content {
+        margin-top: 20px;
+        max-width: 400px;
+    }
+
+    #payment_form_payload .control {
+        margin: 1rem 0;
+    }
+</style>
+
+<fieldset class="admin__fieldset payment-method" id="payment_form_<?= /* @noEscape */ $code ?>"
+          style="display:none">
+    <script>
+        require(['jquery', 'orderform'], function($, orderform) {
+            orderform(<?= $config ?>);
+        });
+    </script>
+
+    <div class="field-number admin__field _required">
+
+        <?php if ( $block->getCardsEnabled() == "1" ): ?>
+        <button type="button" id="card-tab" class="tab active" data-bind="click: showCardTab">Card</button>
+        <?php endif ?>
+        <?php if ( $block->getACHEnabled() == "1" ): ?>
+        <button type="button" id="ach-tab" class="tab" data-bind="click: showACHTab">Bank Account (ACH)</button>
+        <?php endif ?>
+
+        <?php if ( $block->getCardsEnabled() == "1" ): ?>
+        <div id="card-tab-content" class="tab-content">
+            <div class="admin__field-control">
+                <div pl-input="card"></div>
+            </div>
+        </div>
+        <?php endif ?>
+        <?php if ( $block->getACHEnabled() == "1" ): ?>
+        <div id="ach-tab-content" class="tab-content">
+            <input type="hidden" name="payment_method[type]" value="bank_account"/>
+            <div class="field required">
+                <div class="control">
+                    <div class="form-control" pl-input="account_number"></div>
+                </div>
+                <div class="control">
+                    <div class="form-control" pl-input="routing_number"></div>
+                </div>
+                <div class="control">
+                    <select pl-input="account_type">
+                        <option value="checking">Checking</option>
+                        <option value="savings">Savings</option>
+                    </select>
+                </div>
+            </div>
+            <div class="ach-disclaimer">
+                <small>By submitting I authorize the funds to be debited from the bank account above. I understand that if the funds are returned by my bank, I may be subject to a return fee, and that to revoke this authorization I can send a request to help@payload.co or (833) 593-0877 by 6 PM local time. I also understand that the additional convenience fee is non-refundable.</small>
+            </div>
+        </div>
+        <?php endif ?>
+    </div>
+</fieldset>

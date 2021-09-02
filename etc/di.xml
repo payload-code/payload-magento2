@@ -5,7 +5,7 @@
     <virtualType name="PayloadFacade" type="Magento\Payment\Model\Method\Adapter">
         <arguments>
             <argument name="code" xsi:type="const">\Payload\PayloadMagento\Model\Ui\ConfigProvider::CODE</argument>
-            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="formBlockType" xsi:type="string">Payload\PayloadMagento\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
             <argument name="valueHandlerPool" xsi:type="object">PayloadValueHandlerPool</argument>
             <argument name="commandPool" xsi:type="object">PayloadCommandPool</argument>

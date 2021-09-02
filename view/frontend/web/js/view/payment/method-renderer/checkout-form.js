@@ -15,7 +15,6 @@ define([
             initialize: function () {
                 this._super();
                 this.vaultEnabler = new VaultEnabler();
-                console.log(this)
                 this.vaultEnabler.setPaymentCode(this.getVaultCode());
                 return this;
             },
