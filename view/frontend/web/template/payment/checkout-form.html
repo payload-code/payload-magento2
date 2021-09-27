@@ -35,12 +35,29 @@
             <!--/ko-->
 
             <!-- ko if: (isCardsEnabled()) -->
-            <div id="card-tab-content" class="tab-content">
+            <div id="card-tab-content" class="tab-content fieldset">
                 <div class="field required">
+                    <div class="label">Card Number</div>
+
                     <div class="control">
-                        <div pl-input="card" style="padding:10px;"></div>
+                        <div pl-input="card_number" placeholder="0000 0000 0000 0000"></div>
                     </div>
                 </div>
+                <div class="field required field-inline">
+                    <div class="label">Expiration</div>
+
+                    <div class="control">
+                        <div pl-input="expiry" style="width: 10rem;"></div>
+                    </div>
+                </div>
+                <div class="field required field-inline">
+                    <div class="label">Card Code</div>
+
+                    <div class="control">
+                        <div pl-input="cvc" style="width: 10rem;"></div>
+                    </div>
+                </div>
+
 
                 <!-- ko if: (isGooglePayEnabled()) -->
                 <div class="field payment-method-wallet">
@@ -68,15 +85,22 @@
             <!--/ko-->
 
              <!-- ko if: (isACHEnabled()) -->
-            <div id="ach-tab-content" class="tab-content">
+            <div id="ach-tab-content" class="tab-content fieldset">
                 <input type="hidden" name="payment_method[type]" value="bank_account"/>
                 <div class="field required">
+                    <div class="label">Account Number</div>
                     <div class="control">
-                        <div class="form-control" pl-input="account_number"></div>
+                        <div class="form-control" pl-input="account_number" placeholder="00000000"></div>
                     </div>
+                </div>
+                <div class="field required">
+                    <div class="label">Routing Number</div>
                     <div class="control">
-                        <div class="form-control" pl-input="routing_number"></div>
+                        <div class="form-control" pl-input="routing_number" placeholder="000000000"></div>
                     </div>
+                </div>
+                <div class="field required">
+                    <div class="label">Account Type</div>
                     <div class="control">
                         <select pl-input="account_type">
                             <option value="checking">Checking</option>
