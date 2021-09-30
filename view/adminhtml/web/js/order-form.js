@@ -107,7 +107,7 @@ define(['jquery', 'Magento_Ui/js/modal/alert'], function($, malert){
             order._submit = order.submit
 
         order.submit = function() {
-            pl_checkout_form.params.payment.amount = $('#grand-total .admin__total-amount .price').text()
+            pl_checkout_form.params.payment.amount = $('#grand-total .admin__total-amount .price, #grand-total-include-tax .admin__total-amount .price').text()
             pl_checkout_form.submit()
         }
 
