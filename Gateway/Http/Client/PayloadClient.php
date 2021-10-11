@@ -30,11 +30,15 @@ class PayloadClient implements ClientInterface {
             } else {
                 $payment = \Payload\Transaction::get($request['payment']['id']);
 
-                if ( $request['payment']['status'] == 'authorized' ) {
+                if ( isset($request['payment']['order_number'])
+                && !$payment->order_number ) {
                     $payment->update([
                         'order_number' => $request['payment']['order_number']
                     ]);
-                } else if ( $request['payment']['status'] == 'processed' ) {
+                }
+
+                if ( $request['payment']['status'] == 'processed'
+                && $payment->status != 'processed') {
                     $payment->update([
                         'status' => 'processed'
                     ]);
@@ -51,7 +55,8 @@ class PayloadClient implements ClientInterface {
             ];
         } catch ( \Payload\Exceptions\PayloadError $e ) {
             $this->logger->debug([
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'details' => $e->details,
             ]);
             return [
                 'error' => $e->getMessage()

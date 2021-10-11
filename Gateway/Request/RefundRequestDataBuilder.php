@@ -8,8 +8,9 @@ use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Framework\Encryption\EncryptorInterface;
 
-class ProcessRequestDataBuilder implements BuilderInterface {
+class RefundRequestDataBuilder implements BuilderInterface {
     private $config;
+
     private $logger;
 
     protected $encryptor;
@@ -23,28 +24,30 @@ class ProcessRequestDataBuilder implements BuilderInterface {
     public function build(array $buildSubject) {
         $payment = $buildSubject['payment']->getPayment();
         $order   = $buildSubject['payment']->getOrder();
-        $extensionAttributes = $payment->getExtensionAttributes();
-        $paymentToken = $extensionAttributes->getVaultPaymentToken();
+
+        $txn_id = explode(':',$payment->getLastTransId());
+
+        $amount = \Magento\Payment\Gateway\Helper\SubjectReader::readAmount($buildSubject);
+
+        $this->logger->debug([
+                'txn' => $txn_id,
+                #'order' => $order,
+                'total' => $order->getGrandTotalAmount(),
+                'refund' => $amount
+            ]);
 
         $req = [
             'payment' => [
-                'type' => 'payment',
-                'status' => 'processed',
-                'order_number' => $order->getOrderIncrementId(),
-                'amount' => $order->getGrandTotalAmount()
+                'type' => 'refund',
+                'amount' => $amount,
+                'ledger' => [[
+                    'assoc_transaction_id' => end($txn_id)
+                ]]
             ],
             'api_key' => $this->config->getValue('payload_secret_key', $order->getStoreId()),
             'store_token' => false
         ];
 
-
-        if ( $payment->getAdditionalInformation('transaction_id') )
-            $req['payment']['id'] = $payment->getAdditionalInformation('transaction_id');
-        else if ( $payment->getLastTransId() )
-            $req['payment']['id'] = end(explode(':',$payment->getLastTransId()));
-
-        if ( $paymentToken )
-            $req['payment']['payment_method_id'] = $paymentToken->getGatewayToken();
 
         if ( $this->config->getValue('payload_processing_id', $order->getStoreId()) )
             $req['payment']['processing_id'] = $this->getProcessingID($order);

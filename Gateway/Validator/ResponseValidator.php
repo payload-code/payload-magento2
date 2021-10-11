@@ -16,7 +16,7 @@ class ResponseValidator extends AbstractValidator {
         $response = $validationSubject['response']['response'];
 
         foreach ($request as $key => $value) {
-            if ($response->_data[$key] != $value)
+            if (!is_array($value) && !is_object($value) && $response->_data[$key] != $value)
                 return $this->createResult(
                     false,
                     [__($key." invalid")]
