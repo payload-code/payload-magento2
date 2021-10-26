@@ -57,6 +57,10 @@ define([
                 return window.checkoutConfig.payment[this.getCode()].applepay_enabled == "1";
             },
 
+            isMultiShipping: function () {
+                return this.item.is_multi_shipping;
+            },
+
             showACHTab: function() {
                 if ( this.ach_tab )
                     $(this.ach_tab).insertAfter($('#card-tab-content'))

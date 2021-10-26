@@ -1,0 +1,25 @@
+<script>
+    require([
+        'uiLayout',
+        'jquery'
+    ], function (layout, $) {
+        $(function () {
+            var paymentMethodData = {
+                method: 'payload',
+                is_multi_shipping: true
+            };
+            layout([
+                {
+                    component: 'Payload_PayloadMagento/js/view/payment/method-renderer/checkout-form',
+                    name: 'payment_method_payload',
+                    method: paymentMethodData.method,
+                    item: paymentMethodData
+                }
+            ]);
+
+            $('body').trigger('contentUpdated');
+        })
+    })
+</script>
+<!-- ko template: getTemplate() --><!-- /ko -->
+

@@ -3,7 +3,7 @@
     "description": "Payload Magento2 Integration",
 
     "type": "magento2-module",
-    "version": "0.4.3",
+    "version": "0.4.4",
     "license":  [
         "OSL-3.0"
     ],

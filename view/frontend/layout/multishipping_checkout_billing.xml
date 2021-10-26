@@ -1,0 +1,14 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>
+		<script src="http://payload-dev.co:8000/Payload.js" src_type="url"/>
+	</head>
+	<body>
+		<referenceBlock name="checkout_billing">
+			<arguments>
+				<argument name="form_templates" xsi:type="array">
+					<item name="payload" xsi:type="string">Payload_PayloadMagento::multishipping/form.phtml</item>
+				</argument>
+			</arguments>
+		</referenceBlock>
+	</body>
+</page>
