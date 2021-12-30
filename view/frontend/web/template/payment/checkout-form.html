@@ -141,11 +141,13 @@
             <!-- /ko -->
 
 
+            <!-- ko if: (!isMultiShipping()) -->
             <div class="checkout-agreements-block">
             <!-- ko foreach: $parent.getRegion('before-place-order') -->
                 <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
             </div>
+            <!--/ko-->
 
             <!-- ko if: (isGooglePayEnabled()) -->
             <div class="field payment-method-wallet">

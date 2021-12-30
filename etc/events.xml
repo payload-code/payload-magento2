@@ -3,4 +3,7 @@
     <event name="payment_method_assign_data">
         <observer name="payload_payment_method_assign_data" instance="Payload\PayloadMagento\Observer\DataAssignObserver" />
     </event>
+    <event name="payment_method_is_active">
+        <observer name="payload_payment_method_is_active" instance="Payload\PayloadMagento\Observer\PaymentMethodActiveObserver" />
+    </event>
 </config>

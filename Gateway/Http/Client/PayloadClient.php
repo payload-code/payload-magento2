@@ -76,12 +76,13 @@ class PayloadClient implements ClientInterface {
     }
 
     public function generateFraudResponse($payment) {
-        if ($payment->risk_score <= -0.4)
+        if ($payment->risk_score >= 0.7) {
             return [
                 'FRAUD_MSG_LIST' => [
                     'Suspicious activity',
                 ]
             ];
+        }
 
         return [];
     }

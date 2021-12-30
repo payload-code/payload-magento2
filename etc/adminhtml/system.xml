@@ -45,21 +45,13 @@
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="payment_action" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Payment Action</label>
-                    <source_model>Payload\PayloadMagento\Model\Adminhtml\Source\PaymentAction</source_model>
-                </field>
             </group>
             <group id="payload_googlepay" translate="label comment" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Goole Pay through Payload</label>
-                <comment><![CDATA[Accept GoolePay in your Magento store with your Payload account.]]></comment>
+                <comment><![CDATA[Accept Goole Pay in your Magento store with your Payload account.]]></comment>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="payment_action" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Payment Action</label>
-                    <source_model>Payload\PayloadMagento\Model\Adminhtml\Source\PaymentAction</source_model>
                 </field>
             </group>
         </section>
