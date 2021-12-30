@@ -1,4 +1,4 @@
-#payload-checkout-form {
+.payload-checkout-form {
     [data-role="vault-checkbox"] {
         margin-top: 1rem;
     }
@@ -36,12 +36,23 @@
     }
 
     .tab-content {
-        margin-top: 20px;
+        margin-top: 20px!important;
         max-width: 500px;
     }
 
     .ach-disclaimer {
         color: #888;
+    }
+
+    .payment-method-header {
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .payment-method-subheader {
+        color: #777;
+        font-weight: 300;
+        margin-top: 1rem;
     }
 }
 
@@ -55,6 +66,7 @@
     }
     .apple-pay-button {
         -webkit-appearance: -apple-pay-button;
+        -apple-pay-button-type: buy;
     }
     .apple-pay-button-black {
         -apple-pay-button-style: black;
@@ -66,3 +78,43 @@
         -apple-pay-button-style: white-outline;
     }
 }
+
+.mark-icon {
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: center left;
+    height: 3.5rem;
+    display: inline-block;
+    width: 6rem;
+    vertical-align: middle;
+}
+
+.google-pay-mark {
+    background-image: url('@{baseDir}Payload_PayloadMagento/images/google-pay-mark.png');
+    width: 7rem;
+}
+
+.apple-pay-mark {
+    background-image: url('@{baseDir}Payload_PayloadMagento/images/apple-pay-mark.svg');
+}
+
+.visa-mark {
+    background-image: url('@{baseDir}Payload_PayloadMagento/images/visa.svg');
+}
+
+.amex-mark {
+    background-image: url('@{baseDir}Payload_PayloadMagento/images/amex.svg');
+}
+
+.discover-mark {
+    background-image: url('@{baseDir}Payload_PayloadMagento/images/discover.svg');
+}
+
+.mastercard-mark {
+    background-image: url('@{baseDir}Payload_PayloadMagento/images/mastercard.svg');
+}
+
+.echeck-mark {
+    background-image: url('@{baseDir}Payload_PayloadMagento/images/echeck.svg');
+}
+

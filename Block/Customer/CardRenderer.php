@@ -4,7 +4,7 @@ namespace Payload\PayloadMagento\Block\Customer;
 
 use Magento\Vault\Block\AbstractCardRenderer;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
-use Payload\PayloadMagento\Model\Ui\ConfigProvider;
+use Payload\PayloadMagento\Model\Ui\PayloadCcConfigProvider;
 
 
 class CardRenderer extends AbstractCardRenderer
@@ -17,7 +17,7 @@ class CardRenderer extends AbstractCardRenderer
      */
     public function canRender(PaymentTokenInterface $token)
     {
-        return $token->getPaymentMethodCode() === ConfigProvider::CODE;
+        return $token->getPaymentMethodCode() === "payload";
     }
 
     /**

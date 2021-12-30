@@ -5,7 +5,8 @@ define([
         'loader',
         'Magento_Checkout/js/model/quote',
         'Magento_Checkout/js/view/payment/default',
-        'Magento_Vault/js/view/payment/vault-enabler'
+        'Magento_Vault/js/view/payment/vault-enabler',
+        'mage/validation'
     ], function ($, loader, quote, Component, VaultEnabler) {
         return Component.extend({
             defaults: {
@@ -42,19 +43,21 @@ define([
             },
 
             isCardsEnabled: function () {
-                return window.checkoutConfig.payment[this.getCode()].cards_enabled == "1";
+                return this.getCode() == 'payload'
+                    && window.checkoutConfig.payment[this.getCode()].cards_enabled == "1";
             },
 
             isACHEnabled: function () {
-                return window.checkoutConfig.payment[this.getCode()].ach_enabled == "1";
+                return this.getCode() == 'payload'
+                    && window.checkoutConfig.payment[this.getCode()].ach_enabled == "1";
             },
 
             isGooglePayEnabled: function () {
-                return window.checkoutConfig.payment[this.getCode()].googlepay_enabled == "1";
+                return this.getCode() == 'payload_googlepay'
             },
 
             isApplePayEnabled: function () {
-                return window.checkoutConfig.payment[this.getCode()].applepay_enabled == "1";
+                return this.getCode() == 'payload_applepay'
             },
 
             isMultiShipping: function () {
@@ -63,37 +66,40 @@ define([
 
             showACHTab: function() {
                 if ( this.ach_tab )
-                    $(this.ach_tab).insertAfter($('#card-tab-content'))
+                    $(this.ach_tab).insertAfter($(this.el).find('.card-tab-content'))
 
                 if ( !this.card_tab )
-                    this.card_tab = $('#card-tab-content')[0]
+                    this.card_tab = $(this.el).find('.card-tab-content')[0]
 
-                $('#card-tab-content').remove()
-                $('#card-tab').removeClass('active')
-                $('#ach-tab').addClass('active')
+                $(this.el).find('.card-tab-content').remove()
+                $(this.el).find('.card-tab').removeClass('active')
+                $(this.el).find('.ach-tab').addClass('active')
             },
 
             showCardTab: function() {
                 if ( this.card_tab )
-                    $(this.card_tab).insertAfter($('#ach-tab-content'))
+                    $(this.card_tab).insertAfter($(this.el).find('.ach-tab-content'))
 
                 if ( !this.ach_tab )
-                    this.ach_tab = $('#ach-tab-content')[0]
+                    this.ach_tab = $(this.el).find('.ach-tab-content')[0]
 
-                $('#ach-tab-content').remove()
-                $('#ach-tab').removeClass('active')
-                $('#card-tab').addClass('active')
+                $(this.el).find('.ach-tab-content').remove()
+                $(this.el).find('.ach-tab').removeClass('active')
+                $(this.el).find('.card-tab').addClass('active')
             },
 
-            initPayload: function() {
+            initPayload: function(el) {
+                this.el = el
+
                 Payload(window.checkoutConfig.payment.payload.client_key)
+                $(this.el).mage('validation')
 
                 if ( this.isGooglePayEnabled() ) {
                     var paymentsClient = new google.payments.api.PaymentsClient({
                         environment: 'TEST'
                     });
                     var button = paymentsClient.createButton({onClick: () => {}});
-                    $('.google-pay-support>div').html(button)
+                    $(this.el).find('.google-pay-support>div').html(button)
                 }
 
                 var defaults = {
@@ -107,7 +113,7 @@ define([
                     defaults.customer_id = window.checkoutConfig.payment[this.getCode()].customer_id
 
                 this.pl_checkout_form = new Payload.Form({
-                    form: document.getElementById('payload-checkout-form'),
+                    form: this.el,
                     payment: defaults,
                     autosubmit: false
                 })
@@ -116,7 +122,7 @@ define([
                     this.showCardTab()
 
                 this.pl_checkout_form.on('error', function(error) {
-                    $('#payload-checkout-form').next().find('[type=submit]').prop('disabled', false)
+                    $(this.el).next().find('[type=submit]').prop('disabled', false)
 
                     var error_msg = error.error_description
                     if ( error.error_type == 'InvalidAttributes' ) {
@@ -139,15 +145,15 @@ define([
                 this.pl_checkout_form.on('authorized', function(data) {
                     this.transaction_id = data.transaction_id
                     this.placeOrder()
-                    $('#payload-checkout-form').next().find('[type=submit]').prop('disabled', false)
+                    $(this.el).next().find('[type=submit]').prop('disabled', false)
                 }.bind(this))
 
                 this.pl_checkout_form.on('processing', function(data) {
-                    $('#payload-checkout-form').next().find('[type=submit]').prop('disabled', true)
+                    $(this.el).next().find('[type=submit]').prop('disabled', true)
                 }.bind(this))
 
                 this.pl_checkout_form.on('declined', function(data) {
-                    $('#payload-checkout-form').next().find('[type=submit]').prop('disabled', false)
+                    $(this.el).next().find('[type=submit]').prop('disabled', false)
                     this.messageContainer.addErrorMessage({message: data.message});
                 }.bind(this))
 
@@ -155,11 +161,13 @@ define([
                 if ( this.isApplePayEnabled() ) {
                     this.pl_checkout_form.applepay(function(active) {
                         if (!active)
-                            $('.apple-pay-button').hide()
+                            $(this.el).find('.apple-pay-button').hide()
                         else
-                            $('.apple-pay-button').click(function() {
-                                this.buildPaymentRequest()
-                                this.pl_checkout_form.applepay('open')
+                            $(this.el).find('.apple-pay-button').click(function() {
+                                if ( this.validate() ) {
+                                    this.buildPaymentRequest()
+                                    this.pl_checkout_form.applepay('open')
+                                }
                             }.bind(this))
                     }.bind(this))
 
@@ -168,15 +176,21 @@ define([
                 if ( this.isGooglePayEnabled() ) {
                     this.pl_checkout_form.googlepay( function(active) {
                         if (!active)
-                            $('.google-pay-support button').hide()
+                            $(this.el).find('.google-pay-support button').hide()
                         else
-                            $('.google-pay-support button').click(function() {
-                                this.buildPaymentRequest()
-                                this.pl_checkout_form.googlepay('open')
+                            $(this.el).find('.google-pay-support button').click(function() {
+                                if ( this.validate() ) {
+                                    this.buildPaymentRequest()
+                                    this.pl_checkout_form.googlepay('open')
+                                }
                             }.bind(this))
                     }.bind(this))
                 }
 
+            },
+
+            validate: function() {
+                return $(this.el).validation('isValid')
             },
 
             buildPaymentRequest: function() {
@@ -185,20 +199,38 @@ define([
                 var billing_address = quote.billingAddress()
                 if ( billing_address )
                     this.pl_checkout_form.params.payment.payment_method = {
+                        account_holder: billing_address.firstname + ' ' + billing_address.lastname,
+                        email: billing_address.email || quote.guestEmail,
                         billing_address: {
                             street_address: billing_address.street[0],
                             unit_number: billing_address.street[1],
                             city: billing_address.city,
                             state_province: billing_address.regionCode,
-                            postal_code: billing_address.postcode
+                            postal_code: billing_address.postcode,
+                            country_code: billing_address.countryId
                         }
+                    }
+
+                var shipping_address = quote.shippingAddress()
+                if ( shipping_address )
+                    this.pl_checkout_form.params.payment.shipping_details = {
+                        rcpt_first_name: shipping_address.firstname,
+                        rcpt_last_name: shipping_address.lastname,
+                        rcpt_company: shipping_address.company,
+                        street_address: shipping_address.street[0],
+                        unit_number: shipping_address.street[1],
+                        city: shipping_address.city,
+                        state_province: shipping_address.regionCode,
+                        postal_code: shipping_address.postcode,
+                        country_code: shipping_address.countryId
                     }
             },
 
             placePayloadOrder: function() {
-                this.buildPaymentRequest()
-
-                this.pl_checkout_form.submit()
+                if ( this.validate() ) {
+                    this.buildPaymentRequest()
+                    this.pl_checkout_form.submit()
+                }
             }
         });
     }

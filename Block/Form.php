@@ -10,7 +10,7 @@ class Form extends Cc
     public function __construct(
      \Magento\Framework\View\Element\Template\Context $context,
      \Magento\Payment\Model\Config $config,
-     \Payload\PayloadMagento\Model\Ui\ConfigProvider $confProvider,
+     \Payload\PayloadMagento\Model\Ui\PayloadCcConfigProvider $confProvider,
      \Magento\Framework\Serialize\Serializer\Json $json
     )
     {
