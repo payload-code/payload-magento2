@@ -6,19 +6,17 @@ use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Payload\API as pl;
 
-class ConfigProvider implements ConfigProviderInterface
+class PayloadCcConfigProvider implements ConfigProviderInterface
 {
     const CODE = 'payload';
     const VAULT_CODE = 'payload_vault';
     const VAULT_ENABLED = 'payment/payload_vault/active';
-    const PL_CLIENT_KEY = 'payment/payload/payload_client_key';
     const PL_SECRET_KEY = 'payment/payload/payload_secret_key';
     const PL_PROCESSING_ID = 'payment/payload/payload_processing_id';
     const CARDS_ENABLED = 'payment/payload/payload_cards_enabled';
     const ACH_ENABLED = 'payment/payload/payload_ach_enabled';
-    const GOOGLEPAY_ENABLED = 'payment/payload/payload_googlepay_enabled';
-    const APPLEPAY_ENABLED = 'payment/payload/payload_applepay_enabled';
 
+    protected $code = self::CODE;
     protected $encryptor;
     protected $scopeConfig;
 
@@ -36,15 +34,15 @@ class ConfigProvider implements ConfigProviderInterface
 
         pl::$api_key = $this->getPrivateKey();
 
+        $client_key = \Payload\ClientToken::create([]);
+
         $data = [
             'payment' => [
-                self::CODE => [
-                    'client_key' => $this->getClientKey(),
+                $this->code => [
+                    'client_key' => $client_key->id,
                     'processing_id' => $this->getProcessingID(),
                     'cards_enabled' => $this->getCardsEnabled(),
                     'ach_enabled' => $this->getACHEnabled(),
-                    'googlepay_enabled' => $this->getGooglePayEnabled(),
-                    'applepay_enabled' => $this->getApplePayEnabled(),
                     'ccVaultCode' => self::VAULT_CODE
                 ]
             ]
@@ -52,15 +50,10 @@ class ConfigProvider implements ConfigProviderInterface
 
         $cust_id = $this->getCustId();
         if ( $cust_id !== null ) {
-            $data['payment'][self::CODE]['customer_id'] = $cust_id;
+            $data['payment'][$this->code]['customer_id'] = $cust_id;
         }
 
         return $data;
-    }
-
-    public function getClientKey() {
-        $key = $this->scopeConfig->getValue(self::PL_CLIENT_KEY, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        return $this->encryptor->decrypt($key);
     }
 
     public function getPrivateKey() {
@@ -79,14 +72,6 @@ class ConfigProvider implements ConfigProviderInterface
 
     public function getACHEnabled() {
         return $this->scopeConfig->getValue(self::ACH_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-    }
-
-    public function getGooglePayEnabled() {
-        return $this->scopeConfig->getValue(self::GOOGLEPAY_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-    }
-
-    public function getApplePayEnabled() {
-        return $this->scopeConfig->getValue(self::APPLEPAY_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     public function getCustId() {

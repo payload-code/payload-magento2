@@ -9,6 +9,9 @@ class ResponseHandler implements HandlerInterface {
     public function handle(array $handlingSubject, array $response) {
         $payment = $handlingSubject['payment']->getPayment();
         $payment->setTransactionId(substr($response["response"]->status, 0, 1).":".$response["response"]->id);
-        $payment->setIsTransactionClosed(false);
+        if ($response["response"]->status == 'authorized')
+            $payment->setIsTransactionClosed(false);
+        else
+            $payment->setIsTransactionClosed(true);
     }
 }

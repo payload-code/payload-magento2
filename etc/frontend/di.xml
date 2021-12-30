@@ -3,7 +3,21 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="payload_config_provider" xsi:type="object">Payload\PayloadMagento\Model\Ui\ConfigProvider</item>
+                <item name="payload_config_provider" xsi:type="object">Payload\PayloadMagento\Model\Ui\PayloadCcConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="payload_applepay_config_provider" xsi:type="object">Payload\PayloadMagento\Model\Ui\PayloadApplePayConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="payload_googlepay_config_provider" xsi:type="object">Payload\PayloadMagento\Model\Ui\PayloadGooglePayConfigProvider</item>
             </argument>
         </arguments>
     </type>

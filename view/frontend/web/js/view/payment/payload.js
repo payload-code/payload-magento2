@@ -8,6 +8,18 @@ define([
             component: 'Payload_PayloadMagento/js/view/payment/method-renderer/checkout-form'
         })
 
+        if (window.ApplePaySession) {
+            rendererList.push({
+                type: 'payload_applepay',
+                component: 'Payload_PayloadMagento/js/view/payment/method-renderer/checkout-form'
+            })
+        }
+
+        rendererList.push({
+            type: 'payload_googlepay',
+            component: 'Payload_PayloadMagento/js/view/payment/method-renderer/checkout-form'
+        })
+
         return Component.extend({});
     }
 );

@@ -4,7 +4,25 @@
     <!-- Payment Method Facade configuration -->
     <virtualType name="PayloadFacade" type="Magento\Payment\Model\Method\Adapter">
         <arguments>
-            <argument name="code" xsi:type="const">\Payload\PayloadMagento\Model\Ui\ConfigProvider::CODE</argument>
+            <argument name="code" xsi:type="const">\Payload\PayloadMagento\Model\Ui\PayloadCcConfigProvider::CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Payload\PayloadMagento\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PayloadValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">PayloadCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayloadApplePayFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\Payload\PayloadMagento\Model\Ui\PayloadApplePayConfigProvider::CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Payload\PayloadMagento\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PayloadValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">PayloadCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayloadGooglePayFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\Payload\PayloadMagento\Model\Ui\PayloadGooglePayConfigProvider::CODE</argument>
             <argument name="formBlockType" xsi:type="string">Payload\PayloadMagento\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
             <argument name="valueHandlerPool" xsi:type="object">PayloadValueHandlerPool</argument>
@@ -13,7 +31,7 @@
     </virtualType>
     <virtualType name="PayloadVaultFacade" type="Magento\Vault\Model\Method\Vault">
         <arguments>
-            <argument name="code" xsi:type="const">\Payload\PayloadMagento\Model\Ui\ConfigProvider::VAULT_CODE</argument>
+            <argument name="code" xsi:type="const">\Payload\PayloadMagento\Model\Ui\PayloadCcConfigProvider::VAULT_CODE</argument>
             <argument name="valueHandlerPool" xsi:type="object">PayloadVaultPaymentValueHandlerPool</argument>
             <argument name="vaultProvider" xsi:type="object">PayloadFacade</argument>
             <argument name="config" xsi:type="object">PayloadVaultPaymentConfig</argument>
@@ -24,7 +42,7 @@
     <!-- Configuration reader -->
     <virtualType name="PayloadConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">\Payload\PayloadMagento\Model\Ui\ConfigProvider::CODE</argument>
+            <argument name="methodCode" xsi:type="const">\Payload\PayloadMagento\Model\Ui\PayloadCcConfigProvider::CODE</argument>
         </arguments>
     </virtualType>
 
@@ -44,7 +62,7 @@
 
     <virtualType name="PayloadVaultPaymentConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Payload\PayloadMagento\Model\Ui\ConfigProvider::VAULT_CODE</argument>
+            <argument name="methodCode" xsi:type="const">Payload\PayloadMagento\Model\Ui\PayloadCcConfigProvider::VAULT_CODE</argument>
         </arguments>
     </virtualType>
     <virtualType name="PayloadVaultPaymentValueHandler" type="VaultPaymentDefaultValueHandler">
@@ -173,6 +191,7 @@
             <argument name="handlers" xsi:type="array">
                 <item name="txnid" xsi:type="string">Payload\PayloadMagento\Gateway\Response\ResponseHandler</item>
                 <item name="vault_details" xsi:type="string">Payload\PayloadMagento\Gateway\Response\VaultDetailsHandler</item>
+                <item name="fraud" xsi:type="string">Payload\PayloadMagento\Gateway\Response\FraudHandler</item>
             </argument>
         </arguments>
     </virtualType>

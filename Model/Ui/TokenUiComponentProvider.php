@@ -5,7 +5,7 @@ namespace Payload\PayloadMagento\Model\Ui;
 use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Model\Ui\TokenUiComponentInterfaceFactory;
-use Payload\PayloadMagento\Model\Ui\ConfigProvider;
+use Payload\PayloadMagento\Model\Ui\PayloadCcConfigProvider;
 
 
 class TokenUiComponentProvider implements TokenUiComponentProviderInterface
@@ -24,7 +24,7 @@ class TokenUiComponentProvider implements TokenUiComponentProviderInterface
         $component = $this->componentFactory->create(
             [
                 'config' => [
-                    'code' => ConfigProvider::VAULT_CODE,
+                    'code' => PayloadCcConfigProvider::VAULT_CODE,
                     TokenUiComponentProviderInterface::COMPONENT_DETAILS => $jsonDetails,
                     TokenUiComponentProviderInterface::COMPONENT_PUBLIC_HASH => $paymentToken->getPublicHash()
                 ],

@@ -21,7 +21,7 @@
 
     "require": {
         "php": "~7.1.0|~7.2.0|~7.3.0|~7.4.0",
-        "payload/payload-api": ">=0.3.4",
+        "payload/payload-api": ">=0.3.5",
         "magento/module-payment": "100.4.*",
         "magento/module-checkout": "100.4.*",
         "magento/module-sales": "103.0.*",

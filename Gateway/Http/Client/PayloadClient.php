@@ -68,10 +68,21 @@ class PayloadClient implements ClientInterface {
             'response' => $payment
         ]);
 
-        return [
+        return array_merge([
             'request' => $request["payment"],
             'store_token' => $request["store_token"],
             'response' => $payment
-        ];
+        ], $this->generateFraudResponse($payment));
+    }
+
+    public function generateFraudResponse($payment) {
+        if ($payment->risk_score <= -0.4)
+            return [
+                'FRAUD_MSG_LIST' => [
+                    'Suspicious activity',
+                ]
+            ];
+
+        return [];
     }
 }
