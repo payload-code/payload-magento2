@@ -16,5 +16,10 @@
                 <value id="payload" type="host">payload.co</value>
             </values>
         </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="payload" type="host">payload.co</value>
+            </values>
+        </policy>
     </policies>
 </csp_whitelist>

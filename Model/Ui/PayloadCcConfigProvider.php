@@ -32,6 +32,7 @@ class PayloadCcConfigProvider implements ConfigProviderInterface
 
     public function getConfig() {
 
+        pl::$api_url = "http://api.payload-dev.co:8000";
         pl::$api_key = $this->getPrivateKey();
 
         $client_key = \Payload\ClientToken::create([]);
