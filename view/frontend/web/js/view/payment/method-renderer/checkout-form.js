@@ -160,9 +160,10 @@ define([
 
                 if ( this.isApplePayEnabled() ) {
                     this.pl_checkout_form.applepay(function(active) {
-                        if (!active)
+                        if (!active) {
                             $(this.el).find('.apple-pay-button').hide()
-                        else
+                            $(this.el).find('.apple-pay-support+.wallet-not-available').show()
+                        } else
                             $(this.el).find('.apple-pay-button').click(function() {
                                 if ( this.validate() ) {
                                     this.buildPaymentRequest()
@@ -175,9 +176,10 @@ define([
 
                 if ( this.isGooglePayEnabled() ) {
                     this.pl_checkout_form.googlepay( function(active) {
-                        if (!active)
+                        if (!active) {
                             $(this.el).find('.google-pay-support button').hide()
-                        else
+                            $(this.el).find('.google-pay-support+.wallet-not-available').show()
+                        } else
                             $(this.el).find('.google-pay-support button').click(function() {
                                 if ( this.validate() ) {
                                     this.buildPaymentRequest()
