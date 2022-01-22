@@ -39,6 +39,10 @@ class PayloadCcConfigProvider implements ConfigProviderInterface
         $data = [
             'payment' => [
                 $this->code => [
+                    'active' => $this->scopeConfig->getValue(
+                        'payment/'.$this->code.'/active',
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    ),
                     'client_key' => $client_key->id,
                     'processing_id' => $this->getProcessingID(),
                     'cards_enabled' => $this->getCardsEnabled(),
