@@ -138,7 +138,40 @@ define([
                             error_msg = 'Invalid routing number'
                     }
 
-                    this.messageContainer.addErrorMessage({message: error_msg});
+                    malert({
+                        title: 'Error message',
+                        content: error_msg,
+                        modalClass: 'checkout-alert',
+                        clickableOverlay: false,
+                        focus: '[data-role="action"]',
+                        actions: {
+                            always: function () {
+                            }
+                        },
+                        buttons: [{
+                            text: $.mage.__('OK'),
+                            class: 'action-primary action-accept',
+                            click: function () {
+                                this.closeModal(true);
+                            }
+                        }],
+                        keyEventHandlers: {
+
+                            enterKey: function (event) {
+                                if (this.options.isOpen && this.modal.find(document.activeElement).length ||
+                                    this.options.isOpen && this.modal[0] === document.activeElement) {
+                                    this.closeModal(event);
+                                }
+                            },
+                            spaceKey: function (event) {
+                                if (this.options.isOpen && this.modal.find(document.activeElement).length ||
+                                    this.options.isOpen && this.modal[0] === document.activeElement) {
+                                    this.closeModal(event);
+                                }
+                            }
+                        }
+                    })
+
                     console.log(error)
                 }.bind(this))
 

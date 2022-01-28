@@ -128,3 +128,15 @@
     background-image: url('@{baseDir}Payload_PayloadMagento/images/echeck.svg');
 }
 
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .checkout-index-index .modal-popup.checkout-alert .modal-inner-wrap {
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        width: 500px;
+        height: 260px;
+        transform: translate(0%, -50%);
+    }
+}
