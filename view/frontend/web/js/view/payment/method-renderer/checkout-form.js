@@ -6,8 +6,9 @@ define([
         'Magento_Checkout/js/model/quote',
         'Magento_Checkout/js/view/payment/default',
         'Magento_Vault/js/view/payment/vault-enabler',
+        'Magento_Ui/js/modal/alert',
         'mage/validation'
-    ], function ($, loader, quote, Component, VaultEnabler) {
+    ], function ($, loader, quote, Component, VaultEnabler, malert) {
         return Component.extend({
             defaults: {
                 template: 'Payload_PayloadMagento/payment/checkout-form',
@@ -139,7 +140,7 @@ define([
                     }
 
                     malert({
-                        title: 'Error message',
+                        title: 'Unable to process payment',
                         content: error_msg,
                         modalClass: 'checkout-alert',
                         clickableOverlay: false,
