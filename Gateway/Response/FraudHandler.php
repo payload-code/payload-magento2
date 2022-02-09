@@ -12,6 +12,7 @@ use Magento\Sales\Model\Order\Payment;
 class FraudHandler implements HandlerInterface
 {
     const FRAUD_MSG_LIST = 'FRAUD_MSG_LIST';
+    const FRAUD_THRESHOLD = 0.7;
 
     /**
      * Handles fraud messages

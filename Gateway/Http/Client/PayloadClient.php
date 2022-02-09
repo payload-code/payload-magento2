@@ -6,6 +6,7 @@ use Magento\Payment\Gateway\Http\ClientInterface;
 use Magento\Payment\Gateway\Http\TransferInterface;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Framework\Encryption\EncryptorInterface;
+use Payload\PayloadMagento\Gateway\Response\FraudHandler;
 use Payload\API as pl;
 
 class PayloadClient implements ClientInterface {
@@ -20,6 +21,7 @@ class PayloadClient implements ClientInterface {
 
     public function placeRequest(TransferInterface $transferObject) {
         $request = $transferObject->getBody();
+        $capture_skipped = false;
 
         pl::$api_key = $this->encryptor->decrypt($request['api_key']);
 
@@ -39,9 +41,17 @@ class PayloadClient implements ClientInterface {
 
                 if ( $request['payment']['status'] == 'processed'
                 && $payment->status != 'processed') {
-                    $payment->update([
-                        'status' => 'processed'
-                    ]);
+
+                    if ($request['ignore_fraud_threshold'] ||
+                        $payment->risk_score < FraudHandler::FRAUD_THRESHOLD) {
+                        $payment->update([
+                            'status' => 'processed'
+                        ]);
+                    } else {
+                        $request['payment']['status'] = $payment->status;
+                        $capture_skipped = true;
+                    }
+
                 } else if ( $request['payment']['status'] == 'voided' ) {
                     $payment->update([
                         'status'=> 'voided'
@@ -71,14 +81,18 @@ class PayloadClient implements ClientInterface {
         return array_merge([
             'request' => $request["payment"],
             'store_token' => $request["store_token"],
-            'response' => $payment
+            'response' => $payment,
+            'capture_skipped' => $capture_skipped
         ], $this->generateFraudResponse($payment));
     }
 
     public function generateFraudResponse($payment) {
-        if ($payment->risk_score >= 0.7) {
+        if (
+            $payment->risk_score >= FraudHandler::FRAUD_THRESHOLD &&
+            $payment->status == 'authorized'
+        ) {
             return [
-                'FRAUD_MSG_LIST' => [
+                FraudHandler::FRAUD_MSG_LIST => [
                     'Suspicious activity',
                 ]
             ];

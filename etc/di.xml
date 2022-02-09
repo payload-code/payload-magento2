@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
     <!-- Payment Method Facade configuration -->
-    <virtualType name="PayloadFacade" type="Magento\Payment\Model\Method\Adapter">
+    <virtualType name="PayloadFacade" type="Payload\PayloadMagento\Model\Payment\Payload">
         <arguments>
             <argument name="code" xsi:type="const">\Payload\PayloadMagento\Model\Ui\PayloadCcConfigProvider::CODE</argument>
             <argument name="formBlockType" xsi:type="string">Payload\PayloadMagento\Block\Form</argument>
@@ -11,7 +11,7 @@
             <argument name="commandPool" xsi:type="object">PayloadCommandPool</argument>
         </arguments>
     </virtualType>
-    <virtualType name="PayloadApplePayFacade" type="Magento\Payment\Model\Method\Adapter">
+    <virtualType name="PayloadApplePayFacade" type="Payload\PayloadMagento\Model\Payment\Payload">
         <arguments>
             <argument name="code" xsi:type="const">\Payload\PayloadMagento\Model\Ui\PayloadApplePayConfigProvider::CODE</argument>
             <argument name="formBlockType" xsi:type="string">Payload\PayloadMagento\Block\Form</argument>
@@ -20,7 +20,7 @@
             <argument name="commandPool" xsi:type="object">PayloadCommandPool</argument>
         </arguments>
     </virtualType>
-    <virtualType name="PayloadGooglePayFacade" type="Magento\Payment\Model\Method\Adapter">
+    <virtualType name="PayloadGooglePayFacade" type="Payload\PayloadMagento\Model\Payment\Payload">
         <arguments>
             <argument name="code" xsi:type="const">\Payload\PayloadMagento\Model\Ui\PayloadGooglePayConfigProvider::CODE</argument>
             <argument name="formBlockType" xsi:type="string">Payload\PayloadMagento\Block\Form</argument>

@@ -26,6 +26,11 @@ class ProcessRequestDataBuilder implements BuilderInterface {
         $extensionAttributes = $payment->getExtensionAttributes();
         $paymentToken = $extensionAttributes->getVaultPaymentToken();
 
+        if ($payment->hasAdditionalInformation('ignore_fraud_threshold'))
+            $ignore_fraud_threshold = $payment->getAdditionalInformation('ignore_fraud_threshold');
+        else
+            $ignore_fraud_threshold = false;
+
         $req = [
             'payment' => [
                 'type' => 'payment',
@@ -34,7 +39,8 @@ class ProcessRequestDataBuilder implements BuilderInterface {
                 'amount' => $order->getGrandTotalAmount()
             ],
             'api_key' => $this->config->getValue('payload_secret_key', $order->getStoreId()),
-            'store_token' => false
+            'store_token' => false,
+            'ignore_fraud_threshold' => $ignore_fraud_threshold
         ];
 
 
